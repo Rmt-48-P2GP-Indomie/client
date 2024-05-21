@@ -1,34 +1,22 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axiosInstance from "../utils/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, setLoginUser } from "../features/loginSlice";
 
 export default function Login(){
     const nav = useNavigate()
-    const [user, setUser] = useState({
-        username: '',
-        email: '',
-        password: ''
-    })
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.login.user);
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setUser(prevUser => ({
-            ...prevUser,
-            [name]: value
-        }))
-        console.log(user)   
+        const { name, value } = e.target;
+        dispatch(setLoginUser({ [name]: value }));
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const {data} = await axiosInstance({
-                method: 'post',
-                url: '/login',
-                data: user
-            })
-            localStorage.setItem('access_token', data.access_token)
+            await dispatch(loginUser(user))
             nav('/')
         } catch (error) {
             console.log(error);

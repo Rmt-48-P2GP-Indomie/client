@@ -1,34 +1,23 @@
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axiosInstance from "../utils/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser, setRegisterUser } from "../features/registerSlice";
 
 export default function Register(){
     const nav = useNavigate()
-    const [user, setUser] = useState({
-        username: '',
-        email: '',
-        password: ''
-    })
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.register.user);
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
-        setUser(prevUser => ({
-            ...prevUser,
-            [name]: value
-        }))
-        console.log(user)   
-    }
+        const { name, value } = e.target;
+        dispatch(setRegisterUser({ [name]: value }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axiosInstance({
-                method: 'post',
-                url: '/register',
-                data: user
-            })
-            nav('/login')
+            await dispatch(registerUser(user));
+            nav('/login');
         } catch (error) {
             console.log(error);
             toast.error(error.response.data.message, {
