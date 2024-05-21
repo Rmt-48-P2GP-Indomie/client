@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import Messages from "./components/messages";
-import Sidebar from "./components/sidebar";
+import Messages from "../components/messages";
+import Sidebar from "../components/sidebar";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchChatMessages } from "./features/chatMessagesSlice";
+import { fetchChatMessages } from "../features/chatMessagesSlice";
+import axiosInstance from "../utils/axios";
+import { socket } from "../utils/socket";
 
 
 function App() {
   const [currentChat, setCurrentChat] = useState("");
+  const [sendMessages, setSendMessages] = useState("")
   const chatMessages = useSelector((state) => state.chatMessages.list)
   const dispatch = useDispatch();
 
@@ -21,6 +23,32 @@ function App() {
     }
   }, [currentChat, dispatch]);
 
+  const handleSubmit = async(event) => {
+    event.preventDefault();
+    try {
+      await axiosInstance({
+        method: 'post',
+        url: `/${currentChat}/message`,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`
+        },
+        data: {
+          text: sendMessages
+        }
+      })
+      dispatch(fetchChatMessages(currentChat));
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    socket.connect();
+    socket.on('broadcastMessage', () => {
+      dispatch(fetchChatMessages(currentChat));
+    })
+  }, [sendMessages])
+  
   return (
     <div className="flex h-screen">
       <Sidebar handleUserSelect={handleUserSelect}/>
@@ -34,14 +62,16 @@ function App() {
           }
         </div>
         <div className="p-4 border-t border-gray-300">
-          <div className="flex">
+          <form onSubmit={handleSubmit} className="flex">
             <input
               type="text"
               placeholder="Type here..."
+              name='text'
+              onChange={(event) => setSendMessages(event.target.value)}
               className="flex-grow px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-r-lg">Send</button>
-          </div>
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-r-lg">Send</button>
+          </form>
         </div>
       </div>
     </div>

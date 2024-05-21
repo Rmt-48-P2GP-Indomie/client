@@ -11,7 +11,7 @@ import Register from './pages/Register';
 import { store } from './store'
 import { Provider } from 'react-redux'
 import Login from './pages/Login';
-import App from './App';
+import App from './pages/App';
 
 const router = createBrowserRouter([
   {
