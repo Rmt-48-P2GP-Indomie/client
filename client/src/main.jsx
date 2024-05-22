@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   createBrowserRouter,
+  redirect,
   RouterProvider,
 } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
@@ -18,18 +19,38 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+    loader: () => {
+      const token = localStorage.getItem('access_token')
+      if (token) return redirect('/');
+      return null
+    }
   },
   {
     path: "/login",
     element: <Login />,
+    loader: () => {
+      const token = localStorage.getItem('access_token')
+      if (token) return redirect('/');
+      return null
+    }
   },
   {
     path: "/",
     element: <App />,
+    loader: () => {
+      const token = localStorage.getItem('access_token')
+      if (!token) return redirect('/login');
+      return null
+    }
   },
   {
     path: "/chat/:username",
     element: <Chat />,
+    loader: () => {
+      const token = localStorage.getItem('access_token')
+      if (!token) return redirect('/login');
+      return null
+    }
   },
 ]);
 
