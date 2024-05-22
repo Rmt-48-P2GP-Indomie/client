@@ -12,6 +12,7 @@ import { store } from './store'
 import { Provider } from 'react-redux'
 import Login from './pages/Login';
 import App from './pages/App';
+import Chat from './pages/Chat';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
+  },
+  {
+    path: "/chat/:username",
+    element: <Chat />,
   },
 ]);
 

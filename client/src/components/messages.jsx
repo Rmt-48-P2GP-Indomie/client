@@ -13,16 +13,17 @@ export default function Messages({ message }) {
 
   return (
     <div
-    className={`flex ${message.messageBelongsToLoggedUser ? " flex-row-reverse" : "justify-start"} mb-4`}
+    className={`flex ${message.messageBelongsToLoggedUser ? " flex-row-reverse text-right" : "justify-start"} mb-4 items-center`}
     >
       <div className="mr-4 ml-4">
         <img
           className="w-10 h-10 rounded-full"
-          src={message.Sender.Profile.profileImageUrl}
+          src='https://picsum.photos/seed/picsum/200/300'
           alt="User Avatar"
         />
       </div>
       <div>
+      <div className="text-gray-500 text-sm mt-1">{message.Sender.username}</div>
         <div className="bg-gray-200 p-4 rounded-lg">
           <p>{message.text}</p>
         </div>

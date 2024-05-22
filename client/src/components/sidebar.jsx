@@ -16,14 +16,10 @@ export default function Sidebar({handleUserSelect}){
     }
       useEffect(() => {
         dispatch(fetchUser());
-        console.log(userList)
       }, [])
 
     return (
         <div className="w-1/4 border-r border-gray-300">
-        <div className="p-4 border-gray-300">
-          <button className="w-full bg-blue-500 text-white py-2 px-4 rounded">New conversation</button>
-        </div>
         <div className="p-4 border-gray-300">
           <button onClick={handleLogout} className="w-full bg-blue-500 text-white py-2 px-4 rounded">Logout</button>
         </div>

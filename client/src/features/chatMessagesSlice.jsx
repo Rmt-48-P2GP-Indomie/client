@@ -16,10 +16,11 @@ const chatMessagesSlice = createSlice({
     }
 })
 
-const {setChatMessages} = chatMessagesSlice.actions;
+export const {setChatMessages} = chatMessagesSlice.actions;
 
 export const fetchChatMessages = (currentChat) => {
     return async (dispatch) => {
+        console.log(currentChat)
         try {
             const {data} = await axiosInstance({
                 method: 'get',
@@ -28,6 +29,7 @@ export const fetchChatMessages = (currentChat) => {
                   Authorization: `Bearer ${localStorage.getItem("access_token")}`
                 }
               })
+              console.log(data, "<<<fetch")
               dispatch(setChatMessages(data));
         } catch (error) {
             console.log(error)
